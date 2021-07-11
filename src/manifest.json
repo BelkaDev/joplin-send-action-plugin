@@ -1,0 +1,12 @@
+{
+	"manifest_version": 1,
+	"id": "com.joplin.sendAction",
+	"app_min_version": "1.7",
+	"version": "1.0.0",
+	"name": "send action plugin",
+	"description": "allows you to send actions externally to the client like opening notes",
+	"author": "belkadev",
+	"homepage_url": "",
+	"repository_url": "https://github.com/BelkaDev/joplin-send-action-plugin.git",
+	"keywords": []
+}
