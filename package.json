@@ -23,5 +23,14 @@
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",
     "yargs": "^16.2.0"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false,
+    "net": false
   }
 }
