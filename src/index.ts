@@ -9,43 +9,68 @@ joplin.plugins.register({
   onStart: async function() {
     // Settings
     await joplin.settings.registerSection("sendAction", {
-      label: "Send action plugin settings",
+      label: "Send Action",
       iconName: "fas fa-edit"
     });
 
     // Settings
     await joplin.settings.registerSetting("pluginPort", {
-      value: 41185,
+      value: 42420,
       type: SettingItemType.Int,
       section: "sendAction",
       label: "Plugin port",
-      minimum: 10000,
+      minimum: 42000,
       public: true,
-      description: "The port the plugin will listen on"
+      description: "The port to listen on (must restart on change)"
     });
 
-    await joplin.settings.registerSetting("openNotePath", {
-      value: `/notes/open/:noteId`,
-      type: SettingItemType.String,
-      section: "sendAction",
-      label: "Path string to open a note",
-      public: true,
-      description: "default: /notes/open/:noteId"
-    });
-
-    const pluginPort = await joplin.settings.value("pluginPort");
-    app.listen(pluginPort);
-    const openNotePath = await joplin.settings.value("openNotePath");
-    app.get(openNotePath, async (req, res) => {
-      await joplin.data
-        .get(["notes", req.params.noteId], { field: ["id"] })
-        .then(async note => {
-          res.send("200");
-          await joplin.commands.execute("openNote", note.id);
-        })
-        .catch(e => {
-          res.send("404");
-        });
+  
+    initPlugin();
+    await joplin.settings.onChange(() => {
+    app.close();
+      initPlugin();
     });
   }
 });
+
+async function initPlugin() {
+  const pluginPort = await joplin.settings.value("pluginPort");
+  app.listen(pluginPort);
+  app.get("/notes/open/:noteId", async (req, res) => {
+    await joplin.data
+      .get(["notes", req.params.noteId], { field: ["id"] })
+      .then(async note => {
+        res.send("200");
+        await joplin.commands.execute("openNote", note.id);
+      })
+      .catch(e => {
+        res.send("404");
+      });
+  });
+
+  app.get("/notes/create", async (req, res) => {
+        const genRanHex = size => [...Array(size)]
+        .map(() => Math.floor(Math.random() * 16)
+          .toString(16)).join('');
+        const noteId = genRanHex(32);
+         /* await joplin.data
+        .get(["notes", noteId], { field: ["id"] })*/
+        const note = {
+          id: noteId,
+          body:req.query.noteBody,
+          title:req.query.noteTitle,
+          parent_id:req.query.folderId,
+        }
+        await joplin.data.post(['notes'], null, note).then(async note => {
+        console.log(note);
+        await joplin.commands.execute("openNote", noteId);
+        res.send("200");
+
+      }).catch(e => {
+        res.send("404");
+        console.error(e)
+      });;
+});
+
+}
+
