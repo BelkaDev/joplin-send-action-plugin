@@ -1,5 +1,5 @@
 {
-  "name": "Send-action",
+  "name": "joplin-plugin-aaaa",
   "version": "1.0.0",
   "scripts": {
     "dist": "webpack --joplin-plugin-config buildMain && webpack --joplin-plugin-config buildExtraScripts && webpack --joplin-plugin-config createArchive",
@@ -25,12 +25,13 @@
     "yargs": "^16.2.0"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.2",
+    "fs": "^0.0.1-security",
+    "net": "^1.0.2"
   },
   "browser": {
-    "fs": false,
-    "path": false,
-    "os": false,
-    "net": false
-  }
+  "fs": false,
+  "path": false,
+  "os": false
+}
 }

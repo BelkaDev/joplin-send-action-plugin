@@ -14,7 +14,7 @@ joplin.plugins.register({
     });
 
     // Settings
-    await joplin.settings.registerSetting("pluginPort", {
+    joplin.settings.registerSettings({'pluginPort' : {
       value: 42420,
       type: SettingItemType.Int,
       section: "sendAction",
@@ -22,7 +22,7 @@ joplin.plugins.register({
       minimum: 42000,
       public: true,
       description: "The port to listen on (must restart on change)"
-    });
+    }});
 
   
     initPlugin();
